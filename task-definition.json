@@ -1,0 +1,25 @@
+{
+    "family": "docker-app-task",
+    "containerDefinitions": [
+        {
+            "name": "app-container",
+            "image": "559198857091.dkr.ecr.eu-north-1.amazonaws.com/docker-app:latest",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "containerPort": 3000,
+                    "hostPort": 3000,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "memory": 512
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "networkMode": "awsvpc",
+    "cpu": "256",
+    "memory": "512"
+}
