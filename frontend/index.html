@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    /* ===== AUTH SECTION ===== */
+    #auth-section {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .auth-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      padding: 40px;
+      width: 100%;
+      max-width: 380px;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .auth-card h2 {
+      color: #667eea;
+      margin-bottom: 25px;
+      font-size: 24px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-danger {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #ee5a52;
+    }
+
+    .feedback {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .feedback.success {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .feedback.error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    /* ===== DASHBOARD SECTION ===== */
+    #dashboard-section {
+      display: none;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    .dashboard {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .dashboard-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .dashboard-header h1 {
+      font-size: 28px;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 12px 20px;
+      border-radius: 8px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .dashboard-content {
+      padding: 30px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-content {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard-header {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    .card {
+      background: #f9f9f9;
+      border-radius: 10px;
+      padding: 20px;
+      border: 2px solid #f0f0f0;
+    }
+
+    .card h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    .users-grid {
+      display: grid;
+      gap: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .user-item {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .user-item strong {
+      color: #667eea;
+    }
+
+    .user-item small {
+      color: #999;
+    }
+
+    .note-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .note-form textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14px;
+      resize: vertical;
+      min-height: 100px;
+      transition: border-color 0.3s;
+    }
+
+    .note-form textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .notes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .note-item {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #764ba2;
+    }
+
+    .note-item p {
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .note-item small {
+      color: #999;
+    }
+
+    .dashboard-footer {
+      padding: 20px 30px;
+      background: #f9f9f9;
+      border-top: 1px solid #f0f0f0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-logout {
+      margin-left: auto;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat-box {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      border: 2px solid #e0e0e0;
+    }
+
+    .stat-box .value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .stat-box .label {
+      font-size: 12px;
+      color: #999;
+      margin-top: 5px;
+      text-transform: uppercase;
+    }
+
+    #feedback-dashboard {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- AUTH SECTION -->
+    <div id="auth-section">
+      <!-- Register Card -->
+      <div class="auth-card">
+        <h2>✨ Register</h2>
+        <div class="form-group">
+          <input id="reg-username" type="text" placeholder="Username" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <input id="reg-password" type="password" placeholder="Password" autocomplete="new-password">
+        </div>
+        <button class="btn btn-primary" onclick="register()">Create Account</button>
+        <div id="feedback-register" class="feedback" style="display: none;"></div>
+      </div>
+
+      <!-- Login Card -->
+      <div class="auth-card">
+        <h2>🔐 Login</h2>
+        <div class="form-group">
+          <input id="login-username" type="text" placeholder="Username" autocomplete="username">
+        </div>
+        <div class="form-group">
+          <input id="login-password" type="password" placeholder="Password" autocomplete="current-password">
+        </div>
+        <button class="btn btn-primary" onclick="login()">Sign In</button>
+        <div id="feedback-login" class="feedback" style="display: none;"></div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD SECTION -->
+    <div id="dashboard-section">
+      <div class="dashboard">
+        <div class="dashboard-header">
+          <h1>📊 Dashboard</h1>
+          <div class="user-info">
+            <div class="user-avatar" id="user-avatar">U</div>
+            <div>
+              <div style="font-weight: 600;" id="current-username">User</div>
+              <div style="font-size: 12px; opacity: 0.8;">Logged in</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-content">
+          <!-- Statistics & Users -->
+          <div>
+            <div id="feedback-dashboard"></div>
+            <div class="card">
+              <h3>📈 Statistics</h3>
+              <div class="stats">
+                <div class="stat-box">
+                  <div class="value" id="total-users">0</div>
+                  <div class="label">Total Users</div>
+                </div>
+                <div class="stat-box">
+                  <div class="value" id="your-notes">0</div>
+                  <div class="label">Your Notes</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+              <h3>👥 Registered Users</h3>
+              <div class="users-grid" id="users-grid">
+                <p style="color: #999; text-align: center;">Loading users...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes Section -->
+          <div>
+            <div class="card">
+              <h3>📝 Add a Note</h3>
+              <div class="note-form">
+                <textarea id="note-input" placeholder="Write something..."></textarea>
+                <button class="btn btn-primary" onclick="addNote()">Save Note</button>
+              </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+              <h3>📚 Your Notes</h3>
+              <div class="notes-list" id="notes-grid">
+                <p style="color: #999; text-align: center;">No notes yet. Create one!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-footer">
+          <button class="btn btn-secondary" onclick="refreshDashboard()">🔄 Refresh</button>
+          <button class="btn btn-danger btn-logout" onclick="logout()">🚪 Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
